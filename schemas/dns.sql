@@ -1,0 +1,27 @@
+create table dns (
+ts DateTime,
+day Date,
+uid String,
+orig_h String,
+orig_p UInt16,
+resp_h String,
+resp_p UInt16,
+proto Enum8('udp'=0, 'tcp'=1),
+trans_id UInt16,
+rtt Float32,
+query String,
+qclass UInt16,
+qtype_name String,
+rcode UInt16,
+rcode_name Enum16('NOERROR' = 0, 'FORMERR' = 1, 'SERVFAIL' = 2, 'NXDOMAIN' = 3, 'NOTIMP' = 4, 'REFUSED' = 5, 'YXDOMAIN' = 6, 'YXRRSET' = 7, 'NXRRSet' = 8, 'NOTAUTH' = 9, 'NOTZONE' = 10, 'unassigned-11' = 11, 'unassigned-12' = 12, 'unassigned-13' = 13, 'unassigned-14' = 14, 'unassigned-15' = 15, 'BADVERS' = 16, 'BADKEY' = 17, 'BADTIME' = 18, 'BADMODE' = 19, 'BADNAME' = 20, 'BADALG' = 21, 'BADTRUNC' = 22, 'BADSIG' = 3842, ''=-1),
+AA Enum8('F'=0, 'T'=1),
+TC Enum8('F'=0, 'T'=1),
+RD Enum8('F'=0, 'T'=1),
+RA Enum8('F'=0, 'T'=1),
+Z UInt8,
+answers Array(String),
+TTLs Array(UInt32),
+rejected Enum8('F'=0, 'T'=1),
+cc FixedString(2)
+)
+ENGINE = MergeTree(day,halfMD5(uid), (day,halfMD5(uid), uid), 8192);
