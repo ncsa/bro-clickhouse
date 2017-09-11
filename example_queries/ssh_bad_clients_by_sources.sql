@@ -2,10 +2,10 @@ SELECT
     client,
     uniq(day) AS days,
     max(day) AS latest,
-    countIf(auth_success = 'T') as success,
-    countIf(auth_success = 'F') as failure,
-    countIf(auth_success = '')  as unknown,
-    uniq(orig_h) AS sources
+    uniqIf(orig_h, auth_success='T') AS success,
+    uniqIf(orig_h, auth_success='F') AS failure,
+    uniqIf(orig_h, auth_success='') AS unknown,
+    uniq(orig_h) AS total
 FROM default.ssh
 WHERE (direction IN ('INBOUND', ''))
 GROUP BY client
