@@ -28,12 +28,18 @@ def reader(f):
     vectors = set(field for field, type in zip(fields, types) if type.startswith("vector["))
 
     for row in it:
-        if row.startswith("#close"): break
+        if row.startswith('#'):
+            if row.startswith('#fields'):
+                fields = row.rstrip()[1:].split(None, 1)[1].split(sep)
+            continue
         parts = row.rstrip().split(sep)
         parts = [p if p != '-' else '' for p in parts]
+        if len(parts) != len(fields):
+            continue
         rec = OrderedDict(zip(fields, parts))
         for f in vectors:
-            rec[f] = rec[f].split(set_sep)
+            if f in rec:
+                rec[f] = rec[f].split(set_sep)
         yield rec
 
 def maybe_float(v):
@@ -57,18 +63,19 @@ class Determinator:
         self.is_list = False
         self.max_length = 0
         self.min_length = 1000
-
+        
     def add(self, val):
         if val == '-':
             return
         if val == '(empty)':
             val = []
-        if isinstance(val, list):
+        if self.is_list or isinstance(val, list):
             self.is_list = True
             return
-        int_val = maybe_int(val)
+        int_val = None
 
         if self.all_int:
+            int_val = maybe_int(val)
             self.all_int = int_val is not None
         if self.all_float:
             self.all_float = maybe_float(val) is not None
@@ -95,7 +102,7 @@ class Determinator:
             return 'DateTime'
         if self.is_list:
             return 'Array(String)'
-        if len(self.uniques) < 20:
+        if len(self.uniques) < 40:
             return self.enum()
 
         if self.all_int:
@@ -121,12 +128,13 @@ class Determinator:
         
 
 def main():
-    some = itertools.islice(sys.stdin, 10000)
-    records = reader(some)
+    records = reader(sys.stdin)
+
     first = next(records)
     fields = OrderedDict()
     for k,v in first.items():
         fields[k]=Determinator(k)
+        fields[k].add(v)
 
     for rec in records:
         for k, v in rec.items():
