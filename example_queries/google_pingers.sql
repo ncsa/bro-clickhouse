@@ -2,7 +2,9 @@ SELECT
     orig_h,
     uniqExact(day) AS days,
     min(day) AS first,
-    max(day) AS last
+    max(day) AS last,
+    sum(pkts) AS total_packets,
+    max(pkts) AS most_packets_per_day
 FROM
 (
     SELECT
@@ -18,3 +20,4 @@ FROM
 )
 GROUP BY orig_h
 HAVING days > 4
+
