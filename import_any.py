@@ -77,7 +77,7 @@ def reader(f):
     types = headers['types']
     set_sep = headers['set_separator']
 
-    vectors = set(field for field, type in zip(fields, types) if type.startswith("vector["))
+    vectors = set(field for field, type in zip(fields, types) if type.startswith(("set[", "vector[")))
 
     for row in it:
         if row.startswith("#close"): break
@@ -100,6 +100,9 @@ def fixts(ts):
     last_day = d
     return d
 
+def float_to_int(v):
+    return int(v[:v.index(".")])
+
 def get_data(f):
     f = os.popen("zcat {}".format(f))
     for rec in reader(f):
@@ -113,8 +116,17 @@ def get_data(f):
             rec['service'] = rec['service'].split(",")
         if 'remote_location.country_code' in rec:
             rec['country_code'] = rec.pop('remote_location.country_code')
+        if 'remote_location.region' in rec:
+            rec['region'] = rec.pop('remote_location.region')
+            rec['city'] = rec.pop('remote_location.city')
+        if 'remote_location.latitude' in rec:
+            rec['latitude'] = rec.pop('remote_location.latitude')
+            rec['longitude'] = rec.pop('remote_location.longitude')
+
         if 'TTLs' in rec:
-            rec['TTLs'] = [int(v[:v.index(".")]) for v in rec['TTLs'] if v]
+            rec['TTLs'] = [float_to_int(v) for v in rec['TTLs'] if v]
+        if 'suppress_for' in rec:
+            rec['suppress_for'] = float_to_int(rec['suppress_for'])
         yield rec
 
 done = Seen("clickhouse.imported")
