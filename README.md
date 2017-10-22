@@ -30,20 +30,26 @@ sudo service clickhouse-server start
 clickhouse-client
 ```
 Check clickhouse is listening on localhost:8123, this should return 1:
+
 `curl 'http://localhost:8123/?query=SELECT%201'`
 
 Import schemas:
+
 `cat schemas/dns.sql`
+
 copy/paste this SQL into the :) prompt/clickhouse client.
 
 
 Import some data:
+
 `./import_any.py dns /nsm/bro/log/2017-10-10/dns*`
 
 Check how much space this takes up for one day:
+
 `du -h /var/lib/clickhouse/data/default --max-depth=1`
 
 Try out an example query from example_queries directory.
 
 Import rest of your data:
+
 `./import_any.py dns /nsm/bro/log/20*/dns*`
