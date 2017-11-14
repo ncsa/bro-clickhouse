@@ -12,7 +12,7 @@ curve Enum8(''=0, 'sect571r1'=1, 'sect409k1'=2, 'sect283r1'=3, 'brainpoolP256r1'
 server_name String,
 resumed Enum8('T'=0, 'F'=1),
 last_alert String,
-next_protocol Enum8(''=0, 'h2'=1, 'apns-pack-v1:4096:4096'=2, 'http/1.1'=3, 'spdy/3.1'=4, 'spdy/3'=5, 'webrtc'=6, 'grpc-exp'=7, 'bep-relay'=8),
+next_protocol Enum8(''=0, 'h2'=1, 'apns-pack-v1:4096:4096'=2, 'http/1.1'=3, 'spdy/3.1'=4, 'spdy/3'=5, 'webrtc'=6, 'grpc-exp'=7, 'bep-relay'=8, 'h2-14'=9),
 established Enum8('T'=0, 'F'=1),
 cert_chain_fuids Array(String),
 client_cert_chain_fuids Array(String),
