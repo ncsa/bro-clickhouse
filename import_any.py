@@ -94,7 +94,7 @@ def fixts(ts):
     global last_ts
     global last_day
     if ts == last_ts:
-	return last_day
+        return last_day
     d =  fromtimestamp(int(ts)).strftime("%Y-%m-%d")
     last_ts = ts
     last_day = d
