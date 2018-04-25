@@ -6,6 +6,7 @@ import subprocess
 import sys
 import datetime
 from json import dumps
+from argparse import ArgumentParser
 fromtimestamp = datetime.datetime.fromtimestamp
 
 import anydbm
@@ -103,8 +104,8 @@ def fixts(ts):
 def float_to_int(v):
     return int(v[:v.index(".")])
 
-def get_data(f):
-    f = os.popen("zcat {}".format(f))
+def get_data(filename, cmd):
+    f = os.popen("{} {}".format(cmd, filename))
     for rec in reader(f):
         rec['ts'] = rec['ts'].split(".")[0]
         rec['day'] = fixts(rec['ts'])
@@ -132,33 +133,46 @@ def get_data(f):
 
 done = Seen("clickhouse.imported")
 
-TABLE = sys.argv[1]
-FILES = sys.argv[2:]
-ENDPOINT = 'http://localhost:8123'
-
-def do_import(f):
-    query="INSERT INTO {} FORMAT JSONEachRow".format(TABLE)
-    data = get_data(f)
-    print f,
+def do_import(filename, table, endpoint, cmd):
+    query="INSERT INTO {} FORMAT JSONEachRow".format(table)
+    data = get_data(filename, cmd)
+    print filename,
     for i, block in enumerate(chunk(data, 50000)):
-        block_id = '{}_{}'.format(f, i)
+        block_id = '{}_{}'.format(filename, i)
         if done.has_seen(block_id):
             sys.stdout.write("#")
             continue
         blob = "\n".join(dumps(d) for d in block) + "\n"
-        r = requests.post(ENDPOINT, params=dict(query=query,input_format_skip_unknown_fields="1"), data=blob)
+        r = requests.post(endpoint, params=dict(query=query,input_format_skip_unknown_fields="1"), data=blob)
         r.raise_for_status()
         done.mark_seen(block_id)
         sys.stdout.write("#")
         sys.stdout.flush()
     print
 
+def get_arguments():
+    parser = ArgumentParser(description='This script allows to import Bro logs'
+        ' into a clickhouse database.')
+    parser.add_argument('table', metavar='TABLE', type=str,
+        help='table to insert into')
+    parser.add_argument('files', metavar='FILE', type=str, nargs='+',
+        help='file(s) to import')
+    parser.add_argument('-f', action='store_true', dest='force',
+        help='force insert, although already done')
+    parser.add_argument('-z', metavar='CMD', type=str, default='zcat',
+        dest='cmd', help='command to extract logs (default: zcat)')
+    parser.add_argument('-e', metavar='ENDPOINT', type=str, default='http://localhost:8123',
+        dest='endpoint', help='database endpoint (default: http://localhost:8123)')
+    return parser.parse_args()
+
 def main():
-    for f in FILES:
-        if done.has_seen(f):
+    args = get_arguments()
+
+    for f in args.files:
+        if not args.force and done.has_seen(f):
             print f, 'already done'
             continue
-        do_import(f)
+        do_import(f, args.table, args.endpoint, args.cmd)
         done.mark_seen(f)
 
 if __name__ == "__main__":
