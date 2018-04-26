@@ -94,7 +94,7 @@ def fixts(ts):
     global last_ts
     global last_day
     if ts == last_ts:
-	return last_day
+        return last_day
     d =  fromtimestamp(int(ts)).strftime("%Y-%m-%d")
     last_ts = ts
     last_day = d
@@ -108,10 +108,11 @@ def get_data(f):
     for rec in reader(f):
         rec['ts'] = rec['ts'].split(".")[0]
         rec['day'] = fixts(rec['ts'])
-        rec['orig_h'] = rec.pop("id.orig_h")
-        rec['orig_p'] = rec.pop("id.orig_p")
-        rec['resp_h'] = rec.pop("id.resp_h")
-        rec['resp_p'] = rec.pop("id.resp_p")
+        if 'id.orig_h' in rec:
+            rec['orig_h'] = rec.pop("id.orig_h")
+            rec['orig_p'] = rec.pop("id.orig_p")
+            rec['resp_h'] = rec.pop("id.resp_h")
+            rec['resp_p'] = rec.pop("id.resp_p")
         if 'service' in rec:
             rec['service'] = rec['service'].split(",")
         if 'remote_location.country_code' in rec:
