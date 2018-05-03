@@ -22,6 +22,6 @@ resp_pkts UInt64,
 resp_ip_bytes UInt64,
 orig_cc FixedString(2),
 resp_cc FixedString(2),
-peer FixedString(14)
+peer String,
 )
 ENGINE = MergeTree(day,halfMD5(uid), (day,halfMD5(uid), uid), 8192);
