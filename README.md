@@ -1,4 +1,6 @@
-clickhouse stuff for bro
+# clickhouse stuff for bro
+
+## Description
 
 Schemas for conn, dns, ssh, and sql are in [schemas](schemas).  These work but the enums may need updating over time
 
@@ -16,7 +18,7 @@ coming up with a starting point.
 Currently the scripts only work for bro ASCII logs, but a version that can
 import json logs would be easy to write.
 
-##### Usage
+## Usage
 If you have any alarms for .ru traffic, this will light it up, you can also use the [docker image.](https://hub.docker.com/r/yandex/clickhouse-server/)
 ```
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv E0C56BD4    # optional
