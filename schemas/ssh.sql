@@ -19,4 +19,4 @@ host_key_alg Enum8(''=0, 'ssh-dss'=1, 'ssh-rsa'=2, 'ssh-ed25519'=3,'rsa-sha2-256
 host_key FixedString(47),
 country_code FixedString(2)
 )
-ENGINE = MergeTree(day,halfMD5(uid), (day,halfMD5(uid), uid), 8192);
+ENGINE = MergeTree(day,sipHash64(uid), (day,sipHash64(uid), uid), 8192);
