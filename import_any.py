@@ -83,10 +83,11 @@ def reader(f):
     for row in it:
         if row.startswith("#close"): break
         parts = row.rstrip().split(sep)
-        parts = [p if p not in ('-', '(empty)') else '' for p in parts]
+        parts = [p if p not in ('-', '(empty)') else None for p in parts]
         rec = dict(zip(fields, parts))
         for f in vectors:
-            rec[f] = rec[f].split(set_sep)
+            if rec[f] is not None:
+                rec[f] = rec[f].split(set_sep)
         yield rec
 
 last_ts = None
@@ -107,6 +108,10 @@ def float_to_int(v):
 def get_data(filename, cmd):
     f = os.popen("{} {}".format(cmd, filename))
     for rec in reader(f):
+        # filter out None entries
+        rec = {k: v for k, v in rec.items() if v is not None}
+
+
         rec['ts'] = rec['ts'].split(".")[0]
         rec['day'] = fixts(rec['ts'])
         if 'id.orig_h' in rec:
