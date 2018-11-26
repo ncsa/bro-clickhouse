@@ -28,4 +28,4 @@ city String,
 latitude Float32,
 longitude Float32
 )
-ENGINE = MergeTree(day,halfMD5(uid), (day,halfMD5(uid), uid), 8192);
+ENGINE = MergeTree(day,sipHash64(uid), (day,sipHash64(uid), uid), 8192);

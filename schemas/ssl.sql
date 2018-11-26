@@ -22,4 +22,4 @@ client_subject String,
 client_issuer String,
 validation_status Enum8(''=0, 'self signed certificate'=1, 'self signed certificate in certificate chain'=2, 'permitted subtree violation'=3, 'unable to get local issuer certificate'=4, 'certificate has expired'=5, 'ok'=6, 'certificate signature failure'=7)
 )
-ENGINE = MergeTree(day,halfMD5(uid), (day,halfMD5(uid), uid), 8192);
+ENGINE = MergeTree(day,sipHash64(uid), (day,sipHash64(uid), uid), 8192);

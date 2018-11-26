@@ -24,4 +24,4 @@ TTLs Array(UInt32),
 rejected Enum8('F'=0, 'T'=1),
 cc FixedString(2)
 )
-ENGINE = MergeTree(day,halfMD5(uid), (day,halfMD5(uid), uid), 8192);
+ENGINE = MergeTree(day,sipHash64(uid), (day,sipHash64(uid), uid), 8192);
