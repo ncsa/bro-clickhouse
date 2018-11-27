@@ -1,4 +1,4 @@
-create table ssh (
+create table snmp (
 day Date DEFAULT toDate(ts),
 ts DateTime,
 uid String,
