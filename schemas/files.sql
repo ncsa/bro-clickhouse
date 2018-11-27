@@ -7,7 +7,7 @@ create table files (
   conn_uids Array(String),
   source Enum8('SSL'=1, 'HTTP'=2,'DTLS'=3,'SMTP'=4),
   depth UInt8,
-  analyzers Array(Enum8('SHA1'=1, 'MD5'=2, 'X509'=3, 'NEMAJSEXTRACT'=4, 'NEMAHTMLEXTRACT'=5, 'SFAEXTRACT'=6)),
+  analyzers Array(Enum8('SHA1'=1, 'MD5'=2, 'X509'=3, 'NEMAJSEXTRACT'=4, 'NEMAHTMLEXTRACT'=5, 'SFAEXTRACT'=6, 'NEMAEXTRACT' = 7)),
   mime_type String,
   filename Nullable(String),
   duration Float32,
