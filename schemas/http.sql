@@ -7,7 +7,7 @@ create table http (
   resp_h String,
   resp_p UInt16,
   trans_depth UInt16,
-  method Enum8('GET'=1,'POST'=2,'PUT'=3,'DELETE'=4, 'HEAD'=5, 'OPTIONS'=6, 'HI'=7),
+  method Enum8('GET'=1,'POST'=2,'PUT'=3,'DELETE'=4, 'HEAD'=5, 'OPTIONS'=6, 'HI'=7, 'AB' = 8, 'CONNECT' = 9),
   host String,
   uri String,
   referrer Nullable(String),
