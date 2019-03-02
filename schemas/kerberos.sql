@@ -1,0 +1,25 @@
+create table kerberos (
+day Date DEFAULT toDate(ts),
+ts DateTime,
+uid String,
+orig_h String,
+orig_p UInt16,
+resp_h String,
+resp_p UInt16,
+request_type Enum8('AS'=0, 'TGS'=1),
+client String,
+service String,
+success Nullable(Enum8('T'=0, 'F'=1)),
+error_msg Nullable(String),
+from Nullable(Float32),
+till Float32,
+cipher Nullable(String),
+forwardable Enum8('T'=0, 'F'=1),
+renewable Nullable(Enum8('T'=0, 'F'=1)),
+client_cert_subject Nullable(String),
+client_cert_fuid Nullable(String),
+server_cert_subject Nullable(String),
+server_cert_fuid Nullable(String),
+schema UInt32
+)
+ENGINE = MergeTree(day,sipHash64(uid), (day,sipHash64(uid), uid), 8192);
