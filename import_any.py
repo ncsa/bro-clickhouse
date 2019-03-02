@@ -119,7 +119,7 @@ def get_data(filename, cmd):
             rec['orig_p'] = rec.pop("id.orig_p")
             rec['resp_h'] = rec.pop("id.resp_h")
             rec['resp_p'] = rec.pop("id.resp_p")
-        if 'service' in rec:
+        if 'service' in rec and 'conn' in filename:
             rec['service'] = rec['service'].split(",")
         if 'remote_location.country_code' in rec:
             rec['country_code'] = rec.pop('remote_location.country_code')
