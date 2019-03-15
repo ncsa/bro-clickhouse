@@ -5,7 +5,7 @@ create table files (
   tx_hosts Array(String),
   rx_hosts Array(String),
   conn_uids Array(String),
-  source Enum8('SSL'=1, 'HTTP'=2,'DTLS'=3,'SMTP'=4, 'FTP_DATA' = 5),
+  source Enum8('SSL'=1, 'HTTP'=2,'DTLS'=3,'SMTP'=4, 'FTP_DATA' = 5, 'KRB_TCP' = 6, 'KRB' = 7, 'SMB' = 8),
   depth UInt8,
   analyzers Array(Enum8('SHA1'=1, 'MD5'=2, 'X509'=3, 'NEMAJSEXTRACT'=4, 'NEMAHTMLEXTRACT'=5, 'SFAEXTRACT'=6, 'NEMAEXTRACT' = 7)),
   mime_type String,
