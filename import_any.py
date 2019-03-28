@@ -103,7 +103,7 @@ def fixts(ts):
     return d
 
 def float_to_int(v):
-    return int(v[:v.index(".")])
+    return int(float(v))
 
 def get_data(filename, cmd):
     f = os.popen("{} {}".format(cmd, filename))
@@ -134,6 +134,40 @@ def get_data(filename, cmd):
             rec['TTLs'] = [float_to_int(v) for v in rec['TTLs'] if v]
         if 'suppress_for' in rec:
             rec['suppress_for'] = float_to_int(rec['suppress_for'])
+
+        if 'certificate.version' in rec:
+            rec['version'] = rec.pop('certificate.version')
+            rec['serial'] = rec.pop('certificate.serial')
+            rec['key_alg'] = rec.pop('certificate.key_alg')
+            rec['sig_alg'] = rec.pop('certificate.sig_alg')
+            rec['key_type'] = rec.pop('certificate.key_type')
+            rec['key_length'] = rec.pop('certificate.key_length')
+        if 'certificate.issuer' in rec:
+            rec['issuer'] = rec.pop('certificate.issuer')
+        if 'certificate.subject' in rec:
+            rec['subject'] = rec.pop('certificate.subject')
+        if 'certificate.exponent' in rec:
+            rec['exponent'] = rec.pop('certificate.exponent')
+        if 'certificate.curve' in rec:
+            rec['curve'] = rec.pop('certificate.curve')
+        if 'certificate.not_valid_before' in rec:
+            rec['not_valid_before'] = float_to_int(rec.pop('certificate.not_valid_before'))
+        if 'certificate.not_valid_after' in rec:
+            rec['not_valid_after'] = float_to_int(rec.pop('certificate.not_valid_after'))
+
+        if 'san.dns' in rec:
+            rec['dns'] = rec.pop('san.dns')
+        if 'san.uri' in rec:
+            rec['uri'] = rec.pop('san.uri')
+        if 'san.email' in rec:
+            rec['email'] = rec.pop('san.email')
+        if 'san.ip' in rec:
+            rec['ip'] = rec.pop('san.ip')
+
+        if 'basic_constraints.ca' in rec:
+            rec['ca'] = rec.pop('basic_constraints.ca')
+        if 'basic_constraints.path_len' in rec:
+            rec['path_len'] = rec.pop('basic_constraints.path_len')
         yield rec
 
 done = Seen("clickhouse.imported")
